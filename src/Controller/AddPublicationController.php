@@ -27,43 +27,41 @@ class AddPublicationController extends AbstractController
                 $entityManager->persist($entity);
                 $entityManager->flush();
             }
-            $form = $form->getData();
+            $data = $form->getData();
             $doctrine = $this->getDoctrine();
             $entityManager = $doctrine->getManager();
-            $publisher = 1;
-#            $publisher = $doctrine->getRepository(Publisher::class)->findOneBy(['name' => $form['publisher']]);
+            $publisher = $doctrine->getRepository(Publisher::class)->findOneBy(['name' => $data['publisher']]);
             $author = $doctrine->getRepository(Author::class)->findOneBy([
-                'first_name' => $form['first_name'],
-                'second_name' => $form['second_name'],
+                'first_name' => $data['first_name'],
+                'second_name' => $data['second_name'],
             ]);
-            $city = $doctrine->getRepository(City::class)->findOneBy(['name' => $form['city']]);
-#            $type = $doctrine->getRepository(Type::class)->findOneBy(['name' => $form['type']]);
-            $type = 2;
+            $city = $doctrine->getRepository(City::class)->findOneBy(['name' => $data['city']]);
+            $type = $doctrine->getRepository(Type::class)->findOneBy(['name' => $data['type']]);
             if (!$author){
                 $author = new Author;
-                $author->setFirstName($form['first_name']);
-                $author->setSecondName($form['second_name']);
+                $author->setFirstName($data['first_name']);
+                $author->setSecondName($data['second_name']);
                 addEntity($entityManager, $author);
             }
             if (!$city){
                 $city = new City;
-                $city->setName($form['city']);
+                $city->setName($data['city']);
                 addEntity($entityManager, $city);
             }
             if (!$publisher){
                 $publisher = new Publisher();
-                $publisher->setName($form['publisher']);
+                $publisher->setName($data['publisher']);
                 addEntity($entityManager, $publisher);
             }
             $publication = new Publication;
-            $publication->setName($form['name']);
-            $publication->setDoi($form['doi']);
-            $publication->setYear($form['year']);
-            $publication->setPages($form['pages']);
-#            $publication->setType($type->getId());
+            $publication->setName($data['name']);
+            $publication->setDoi($data['doi']);
+            $publication->setYear($data['year']);
+            $publication->setPages($data['pages']);
+            $publication->setType($type);
             $publication->addAuthor($author);
-            $publication->setPublisher($publisher->getId());
-            $publication->setCity($city->getId());
+            $publication->setPublisher($publisher);
+            $publication->setCity($city);
             addEntity($entityManager, $publication);
         }
         return $this->render('add_publication/index.html.twig', [
