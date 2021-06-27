@@ -3,9 +3,9 @@
 {% block title %}Вывод публикаций в стандарте ГОСТ{% endblock %}
 
 {% block body %}
-{% for pub in publications %}
     <ol>
+{% for pub in publications %}
         <li>{{ pub.name }}</li>
-    </ol>
 {% endfor %}
+    </ol>
 {% endblock %}

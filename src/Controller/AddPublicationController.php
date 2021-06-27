@@ -12,13 +12,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class AddPublicationController extends AbstractController
 {
     /**
      * @Route("/add/publication", name="add_publication")
      */
-    public function add(Request $request): Response
+    public function add(Request $request)
     {
         $form = $this->createForm(PublicationType::class);
         $form->handleRequest($request);
@@ -63,6 +64,7 @@ class AddPublicationController extends AbstractController
             $publication->setPublisher($publisher);
             $publication->setCity($city);
             addEntity($entityManager, $publication);
+            return $this->redirect('/get/publication');
         }
         return $this->render('add_publication/index.html.twig', [
             'form' => $form->createView(),
